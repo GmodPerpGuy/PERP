@@ -2,7 +2,7 @@
 
 
 Msg("Loading bass module... ");
---require("bass");
+require("bass");
 
 if (BASS) then
 	Msg("done!\n");

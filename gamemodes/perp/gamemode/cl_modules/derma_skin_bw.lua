@@ -11,7 +11,7 @@ SKIN.colOutline	= Color( 51, 51, 51, 225 )
 
 // You can change the colours from the Default skin
 
-SKIN.colPropertySheet 			= Color( 225, 225, 225, 255 )
+SKIN.colPropertySheet 			= Color( 0, 0, 0, 0 )
 SKIN.colTab			 			= SKIN.colPropertySheet
 SKIN.colTabText		 			= Color( 51, 51, 51, 225 )
 SKIN.colTabInactive				= Color( 225, 225, 225, 225 )
