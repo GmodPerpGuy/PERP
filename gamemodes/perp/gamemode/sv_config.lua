@@ -5,7 +5,7 @@ REGISTRATION_ADDR = "http://loading.gmod.ctsgaming.com/perp/register.php?steamid
 CHANGE_PASSW_ADDR = "";
 
 // EXPERIENCE VALUES
-GM.ExperienceForCraft = 20;					// Experience given in the SKILL_CRAFTING skill when a new item is mixed.
+GM.ExperienceForCraft = 10;					// Experience given in the SKILL_CRAFTING skill when a new item is mixed. was 20
 GM.AllowOOC = true;
 
 // Wut.
@@ -98,9 +98,9 @@ GM.SpeedVars =			{
 						};
 							
 JAIL_TIME = 60;
-JAIL_TIME_WARRENTED = 60 * 2;
+JAIL_TIME_WARRENTED = 120 * 2;
 GM.CopReward_Arrest = 75;
 
 // Max Props
-MAX_PROPS_NORM = 20;
-MAX_PROPS_VIP = 50;
+MAX_PROPS_NORM = 50;
+MAX_PROPS_VIP = 75;

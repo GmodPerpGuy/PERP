@@ -162,14 +162,14 @@ GM.teamToBlacklist[TEAM_ROADCREW] = 'j';
 GM.teamToBlacklist[TEAM_BUSDRIVER] = 'k';
 
 // Times
-GM.RequiredTime_Cop = 2; // in hours ._.
+GM.RequiredTime_Cop = 72; // in hours ._.
 GM.RequiredTime_SecretService = 8; // in hours ._.
-GM.RequiredTime_SWAT = 48;
-GM.RequiredTime_Fire = 4;
-GM.RequiredTime_Paramedic = 4;
+GM.RequiredTime_SWAT = 336;
+GM.RequiredTime_Fire = 0;
+GM.RequiredTime_Paramedic = 1;
 GM.RequiredTime_Dispatcher = 8;
-GM.RequiredTime_RoadCrew = 6;
-GM.RequiredTime_BusDriver = 72;
+GM.RequiredTime_RoadCrew = 1;
+GM.RequiredTime_BusDriver = 336;
 
 // Other
 
@@ -199,8 +199,8 @@ COST_FOR_HYDRAULICS = 20000;
 COST_FOR_UNDERGLOW = 20000;
 
 // Medic NPC
-COST_FOR_HEALTHRESET = 500;
-COST_FOR_LEGFIX = 1000;
+COST_FOR_HEALTHRESET = 1000;
+COST_FOR_LEGFIX = 1500;
 
 GM.GeneResetPrice = 5000;
 GM.NewGenePrice = 5000;
@@ -210,7 +210,7 @@ GM.MaxGenes = 15;
 GM.RadioStations = 	{
 						{'88.1 Dubstep', 'http://dubstep.fm/listen.pls'},
 						{'94.3 The Buzz', 'http://scfire-mtc-aa05.stream.aol.com:80/stream/1022'},
-						{'95.9 ChroniX Metal', 'http://scfire-mtc-aa06.stream.aol.com:80/stream/1039'},
+						{'95.9 ChroniX Metal', 'https://ice42.securenetsystems.net/KDLC'},
 						{'97.7 The Hitz', 'http://scfire-dtc-aa02.stream.aol.com:80/stream/1074'},
 						{'97.9 Fresh 40', 'http://yp.shoutcast.com/sbin/tunein-station.pls?id=1281283'},
 						{'98.5 Trance', 'http://scfire-mtc-aa05.stream.aol.com:80/stream/1003'},
@@ -226,39 +226,39 @@ GM.RadioStations = 	{
 					};
 
 // Mayor Stuffs					
-GM.UpkeepCost_PoliceCar 	= 25
-GM.UpkeepCost_Firetruck 	= 25
-GM.UpkeepCost_SWATVan 		= 50
-GM.UpkeepCost_Ambulance 	= 25
-GM.UpkeepCost_Stretch 		= 50
+GM.UpkeepCost_PoliceCar 	= 30
+GM.UpkeepCost_Firetruck 	= 30
+GM.UpkeepCost_SWATVan 		= 30
+GM.UpkeepCost_Ambulance 	= 30
+GM.UpkeepCost_Stretch 		= 30
 
-GM.MaxPayDay_Police = 125
-GM.MaxPayDay_SWAT = 150
-GM.MaxPayDay_Paramedic = 125
-GM.MaxPayDay_Fireman = 125
-GM.MaxPayDay_Dispatcher = 150
-GM.MaxPayDay_SecretService = 150
-GM.MinimumPayGov = 50
+GM.MaxPayDay_Police = 250
+GM.MaxPayDay_SWAT = 400
+GM.MaxPayDay_Paramedic = 275
+GM.MaxPayDay_Fireman = 210
+GM.MaxPayDay_Dispatcher = 200
+GM.MaxPayDay_SecretService = 300
+GM.MinimumPayGov = 250
 
 GM.MaxVehicles_SWAT = 2
-GM.MaxVehicles_Police = 5
-GM.MaxVehicles_Medic = 5
-GM.MaxVehicles_Fire = 5
-GM.MaxVehicles_SecretService = 1
+GM.MaxVehicles_Police = 12
+GM.MaxVehicles_Medic = 6
+GM.MaxVehicles_Fire = 4
+GM.MaxVehicles_SecretService = 2
 
-GM.MaxEmployment_Police = 10
-GM.MaxEmployment_SWAT = 4
-GM.MaxEmployment_Fire = 5
-GM.MaxEmployment_Medic = 5
-GM.MaxEmployment_SecretService = 2
+GM.MaxEmployment_Police = 24
+GM.MaxEmployment_SWAT = 8
+GM.MaxEmployment_Fire = 8
+GM.MaxEmployment_Medic = 8
+GM.MaxEmployment_SecretService = 3
 GM.MaxEmployment_BusDriver = 2
-GM.MaxEmployment_Tow = 2
+GM.MaxEmployment_Tow = 8
 
 GM.MaxTax_Sales = 50
 GM.MaxTax_Income = 50
 
-GM.MayorPay = 125
-FREE_CASH_PER_PLAYER = 50
+GM.MayorPay = 300
+FREE_CASH_PER_PLAYER = 15000
 
 
 // Client config stuff

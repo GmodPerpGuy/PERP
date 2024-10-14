@@ -6,6 +6,17 @@ local function PlayerSave ( ply )
 	ply:Save();
 end
 
+-- Helper function to ensure a message is registered before sending
+local registeredMessages = registeredMessages or {} -- Ensure the table exists
+
+local function EnsureNetworkString(messageName)
+    if not registeredMessages[messageName] then
+        util.AddNetworkString(messageName)  -- Register the network string if it hasn't been registered yet
+        registeredMessages[messageName] = true
+        print("[Notice] Added network string: " .. messageName)
+    end
+end
+
 GM.OrganizationData = {};
 GM.OrganizationMembers = {};
 

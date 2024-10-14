@@ -56,7 +56,7 @@ end
 
 // This part is handled through UMsgs so baddies can't hear from across the map. Silly exploiters.
 function GM:ChatText ( playerID, playerName, text, type )
-	if (!LocalPlayer():IsAdmin()) then
+	 if pl:IsAdmin() then
 		if string.find(text, "joined") then return; end
 		if string.find(text, "left") then return; end
 	end
@@ -134,26 +134,26 @@ function PLAYER:ChatMessage ( Chat )
 end
 
 GM.chatPrefixes = {}
-GM.chatPrefixes["ooc"] = "OOC";
-GM.chatPrefixes["/"] = "OOC";
-GM.chatPrefixes["//"] = "Local OOC";
-GM.chatPrefixes["looc"] = "Local OOC";
-GM.chatPrefixes["me"] = "Action";
-GM.chatPrefixes["action"] = "Action";
-GM.chatPrefixes["w"] = "Whisper";
-GM.chatPrefixes["y"] = "Yell";
-GM.chatPrefixes["911"] = "Emergency";
-GM.chatPrefixes["999"] = "Emergency";
-GM.chatPrefixes["broadcast"] = "Broadcast";
-GM.chatPrefixes["radio"] = "Government Radio";
-GM.chatPrefixes["org"] = "Organization";
-GM.chatPrefixes["pm"] = "Private Message";
-GM.chatPrefixes["tm"] = "Text Message";
-GM.chatPrefixes["admin"] = "Admin Talk";
-GM.chatPrefixes["advert"] = "Advertisement";
-GM.chatPrefixes["hive"] = "Hive";
-GM.chatPrefixes["report"] = "Report";
-GM.chatPrefixes["it"] = "Event";
-GM.chatPrefixes["event"] = "Event";
-GM.chatPrefixes["roll"] = "Roll";
+GM.chatPrefixes["ooc"] = "[OOC]";
+GM.chatPrefixes["/"] = "[OOC]";
+GM.chatPrefixes["//"] = "[Local OOC]";
+GM.chatPrefixes["looc"] = "[Local OOC]";
+GM.chatPrefixes["me"] = "[Action]";
+GM.chatPrefixes["action"] = "[Action]";
+GM.chatPrefixes["w"] = "[Whisper]";
+GM.chatPrefixes["y"] = "[Yell]";
+GM.chatPrefixes["911"] = "[Emergency]";
+GM.chatPrefixes["999"] = "[Emergency]";
+GM.chatPrefixes["broadcast"] = "[Broadcast]";
+GM.chatPrefixes["radio"] = "[Government Radio]";
+GM.chatPrefixes["org"] = "[Organization]";
+GM.chatPrefixes["pm"] = "[Private Message]";
+GM.chatPrefixes["tm"] = "[Text Message]";
+GM.chatPrefixes["admin"] = "[Admin Talk]";
+GM.chatPrefixes["advert"] = "[Advertisement]";
+GM.chatPrefixes["hive"] = "[Hive]";
+GM.chatPrefixes["report"] = "[Report]";
+GM.chatPrefixes["it"] = "[Event]";
+GM.chatPrefixes["event"] = "[Event]";
+GM.chatPrefixes["roll"] = "[Roll]";
 

@@ -1,4 +1,4 @@
-require('gatekeeper')
+--require('gatekeeper')
 
 
 function GM.GetEntPos ( Player )

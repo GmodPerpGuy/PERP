@@ -67,17 +67,18 @@ function PLAYER:parseVehicleString ( input )
 	end
 end
 
-function PLAYER:CompileVehicles ( )
-	local saveString = "";
-	
-	for k, v in pairs(self.Vehicles) do
-		if (k && tostring(k) != "" && string.len(tostring(k)) == 1) then 
-			saveString = saveString .. tostring(k) .. "," .. v[1] .. "," .. v[2] .. "," .. v[3] .. "," .. v[4] .. ";";
-		end
-	end
-	
-	return saveString;
+function PLAYER:CompileVehicles()
+    local saveString = {}
+
+    for k, v in pairs(self.Vehicles) do
+        if k and tostring(k) ~= "" and #tostring(k) == 1 then
+            table.insert(saveString, string.format("%s,%s,%s,%s,%s", tostring(k), v[1], v[2], v[3], v[4]))
+        end
+    end
+
+    return table.concat(saveString, ";") .. ";"
 end
+
 
 local function buyVehicle ( Player, Cmd, Args )
 	if (!Args[1]) then return; end
@@ -1227,48 +1228,63 @@ end
 hook.Add("Think", "GM.MonitorVehicleHealth", GM.MonitorVehicleHealth);
 
 function GM.TakeFuel(Player, Command, Args)
-	if (!Args[1]) then return end
+    if not Args[1] then return end
 
-	local ID = tostring(Args[1])
-	local Speed = tonumber(Args[2])
-	local DF = tostring(Args[3])
+    local ID = tostring(Args[1])
+    local Speed = tonumber(Args[2])
+    local DF = tostring(Args[3])
 
-	if (DF) then
-		local FuelCost = nil
-		local Owner = Player:GetVehicle():GetNetworkedEntity("owner")
-		local fcs = 0
-		
-		for k, v in pairs(GAMEMODE.FuelVars) do
-			if ID == tostring(k) then
-				fcs = v[2]
-			end
-		end
-		
-		FuelCost = 1
-		
-		for k, v in pairs(GAMEMODE.SpeedVars) do
-			if (Speed > tonumber(v[1])) and (Speed < tonumber(v[2])) then
-				FuelCost = (tonumber(v[3]) * fcs)
-			end
-		end
-		
-		if FuelCost > Owner:GetFuel() then
-			FuelCost = Owner:GetFuel()
-		end
-		
-		if (Owner:GetFuel() <= 0) then
-			Player:GetVehicle():Fire("turnoff", nil, 0)
-		end
-		
-		if (Owner:GetFuel() < FuelCost) then
-			return
-		end
-		
-		Owner:TakeFuel(FuelCost)
-		
-		Player:GetVehicle():SetNetworkedInt("fuel", Owner:GetFuel())
-	end
+    -- Ensure the player is in a valid vehicle and that the vehicle has an owner
+    local vehicle = Player:GetVehicle()
+    if not IsValid(vehicle) then return end
+    local Owner = vehicle:GetNetworkedEntity("owner")
+    if not IsValid(Owner) then return end
+
+    -- Check if the player is pressing the gas pedal (forward key)
+    if not Player:KeyDown(IN_FORWARD) then
+        return -- Exit if the gas pedal isn't pressed
+    end
+
+    if DF then
+        local FuelCost = 1
+        local fcs = 0
+
+        -- Calculate the fuel consumption multiplier based on the vehicle ID
+        for k, v in pairs(GAMEMODE.FuelVars) do
+            if ID == tostring(k) then
+                fcs = v[2]
+            end
+        end
+
+        -- Determine the fuel cost based on the current speed
+        for k, v in pairs(GAMEMODE.SpeedVars) do
+            if Speed > tonumber(v[1]) and Speed < tonumber(v[2]) then
+                FuelCost = tonumber(v[3]) * fcs
+            end
+        end
+
+        -- Ensure FuelCost doesn't exceed the remaining fuel
+        if FuelCost > Owner:GetFuel() then
+            FuelCost = Owner:GetFuel()
+        end
+
+        -- Turn off the vehicle if there's no fuel
+        if Owner:GetFuel() <= 0 then
+            vehicle:Fire("turnoff", nil, 0)
+            return
+        end
+
+        -- Prevent fuel consumption if the remaining fuel is less than the required amount
+        if Owner:GetFuel() < FuelCost then
+            return
+        end
+
+        -- Deduct fuel and update the vehicle's fuel level
+        Owner:TakeFuel(FuelCost)
+        vehicle:SetNetworkedInt("fuel", Owner:GetFuel())
+    end
 end
+
 
 concommand.Add('perp_take_fuel', GM.TakeFuel)
 

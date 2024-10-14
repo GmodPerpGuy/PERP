@@ -47,8 +47,8 @@ function GM:Initialize ( )
 	self.Serious = true;
 	
     SQL_INFO_1 = "localhost"; -- HOST
-	SQL_INFO_2 = "gmod_perp"; -- Username
-	SQL_INFO_3 = "Doggie14";  -- Password
+	SQL_INFO_2 = "root"; -- Username
+	SQL_INFO_3 = "1234";  -- Password
 	SQL_INFO_4 = "gmod_perp"; -- Database Name
 
 	tmysql.initialize(SQL_INFO_1, SQL_INFO_2, SQL_INFO_3, SQL_INFO_4, 3306);
@@ -56,7 +56,7 @@ function GM:Initialize ( )
 	RunConsoleCommand("sv_visiblemaxplayers", self.numPlayers-self.ReservedSlots);
 	
 	timer.Simple(1, function ( )
-		RunConsoleCommand("sv_allowdownload", "0");
+		RunConsoleCommand("sv_allowdownload", "1");
 		RunConsoleCommand("sv_allowupload", "1");
 		RunConsoleCommand("sv_usermessage_maxsize", "5000");
 		RunConsoleCommand('lua_log_sv', '1');
@@ -104,7 +104,7 @@ end
 function GM:InitPostEntity ( )
 	self.GatherInvalidNames();
 	
-	timer.Simple(1, GAMEMODE.PushNumPlayers);
+	--timer.Simple(1, GAMEMODE.PushNumPlayers);
 end
 
 function GM:PlayerInitialSpawn ( Player )
@@ -112,15 +112,15 @@ function GM:PlayerInitialSpawn ( Player )
 	Player.StorageItems = {}
 	Player:SetTeam(TEAM_CITIZEN)
 	Player:ConCommand("playx_enabled 0")
-	Player:ConCommand("cl_playerspraydisable 1")
-	self.PushNumPlayers();
-	timer.Simple(5, GAMEMODE.SendJobInformation, Player)
+	--Player:ConCommand("cl_playerspraydisable 1")
+	--self.PushNumPlayers();
+	timer.Simple(10, GAMEMODE.SendJobInformation, Player)
 	--RunConsoleCommand("perp_a_fr", Player:UniqueID());
 end
 
-function GM:PlayerConnect ( )
-	self.PushNumPlayers();
-end
+--function GM:PlayerConnect ( )
+---	self.PushNumPlayers();
+--end
 
 function GM:PlayerDisconnected ( ) 
 	timer.Simple(1, GAMEMODE.PushNumPlayers);

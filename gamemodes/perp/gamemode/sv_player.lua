@@ -1,67 +1,65 @@
 
-GM.UMsgRedun = {};
-function PLAYER:SetUMsgString ( StringID, StringValue )
-	self.StringRedun = self.StringRedun or {};
-	
-	if StringValue == nil then
-		self.StringRedun[StringID] = nil;
-		
-		umsg.Start("perp_ums");
-			umsg.Entity(self);
-			umsg.String(StringID);
-			umsg.Short(5);
-		umsg.End();
-		
-		return;
-	end
+GM.UMsgRedun = {}
 
-	self.StringRedun[StringID] = {entity = self, value = StringValue};
-	
-	self:SendUMsgVar("perp_ums", nil, self, StringID, StringValue);
+function PLAYER:SetUMsgString(StringID, StringValue)
+    self.StringRedun = self.StringRedun or {}
+
+    if StringValue == nil then
+        self.StringRedun[StringID] = nil
+
+        umsg.Start("perp_ums")
+            umsg.Entity(self)
+            umsg.String(StringID)
+            umsg.Short(5)
+        umsg.End()
+
+        return
+    end
+
+    self.StringRedun[StringID] = {entity = self, value = StringValue}
+
+    self:SendUMsgVar("perp_ums", nil, self, StringID, StringValue)
 end
 
-PLAYER.SetUMsgInt = PLAYER.SetUMsgString;
-PLAYER.SetUMsgBool = PLAYER.SetUMsgString;
+-- Redirecting functions
+PLAYER.SetUMsgInt = PLAYER.SetUMsgString
+PLAYER.SetUMsgBool = PLAYER.SetUMsgString
 
-function PLAYER:SendUMsgVar ( Type, ToWho, Entity, StringID, StringValue, loadVar )
-	if (ToWho && !IsValid(ToWho)) then return; end
-	
-	umsg.Start(Type, ToWho);
-		if (Type == "perp_ums") then
-			umsg.Entity(Entity);
-		end
-		
-		umsg.String(StringID);
-		
-		if type(StringValue) == "string" then
-			umsg.Short(1);
-			umsg.String(StringValue);
-		elseif type(StringValue) == "number" then
-			if (math.floor(StringValue) != StringValue) then
-				umsg.Short(2);
-				umsg.Float(StringValue);
-			else
-				umsg.Short(3);
-				
-				if (StringID == "cash" || StringID == "bank") then
-					umsg.Long(StringValue);
-				else
-					umsg.Short(StringValue);
-				end
-			end
-		elseif type(StringValue) == "boolean" then
-			umsg.Short(4);
-			umsg.Bool(StringValue);
-		end
-		
-		if (loadVar) then
-			umsg.Bool(true);
-		else
-			umsg.Bool(false);
-		end
-	umsg.End();
+function PLAYER:SendUMsgVar(Type, ToWho, Entity, StringID, StringValue, loadVar)
+    if ToWho and not IsValid(ToWho) then return end
+    
+    umsg.Start(Type, ToWho)
+
+    if Type == "perp_ums" then
+        umsg.Entity(Entity)
+    end
+
+    umsg.String(StringID)
+
+    if type(StringValue) == "string" then
+        umsg.Short(1)
+        umsg.String(StringValue)
+    elseif type(StringValue) == "number" then
+        if math.floor(StringValue) ~= StringValue then
+            umsg.Short(2)
+            umsg.Float(StringValue)
+        else
+            umsg.Short(3)
+            if StringID == "cash" or StringID == "bank" then
+                umsg.Long(StringValue)
+            else
+                umsg.Short(StringValue)
+            end
+        end
+    elseif type(StringValue) == "boolean" then
+        umsg.Short(4)
+        umsg.Bool(StringValue)
+    end
+
+    umsg.Bool(loadVar or false)  -- Simplified loading variable
+    umsg.End()
 end
-	
+
 function PLAYER:FindRunSpeed()
 	if (!self.Stamina) then return; end
 	
