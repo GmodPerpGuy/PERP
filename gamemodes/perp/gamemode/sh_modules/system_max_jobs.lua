@@ -3,20 +3,20 @@
 
 GM.MinimumForSWAT = 25;
 
-GM.MaximumCops = 4;
-GM.MaximumParamedic = 2;
-GM.MaximumFireMen = 2;
-GM.MaximumSWAT = 0;
-GM.MaximumDispatchers = 1;
-GM.MaximumSecretService = 0;
-GM.MaximumRoadCrew = 2;
+GM.MaximumCops = 25;
+GM.MaximumParamedic = 18;
+GM.MaximumFireMen = 12;
+GM.MaximumSWAT = 25;
+GM.MaximumDispatchers = 4;
+GM.MaximumSecretService = 3;
+GM.MaximumRoadCrew = 8;
 GM.MaximumBusDrivers = 2;
 GM.PeopleRequired_Mayor = 0;
 	
-GM.MaxCopCars = 2
-GM.MaxFireTrucks = 1
-GM.MaxAmbulances = 1
-GM.MaxSWATVans = 0;
+GM.MaxCopCars = 12
+GM.MaxFireTrucks = 4
+GM.MaxAmbulances = 8
+GM.MaxSWATVans = 12;
 GM.MaxStretch = 0;
 GM.MaxRoadCrewTrucks = math.Clamp(math.floor(GM.MaximumRoadCrew * .5), 1, 6);
 GM.MaxBusses = math.Clamp(math.floor(GM.MaximumBusDrivers * .5), 1, 2);
