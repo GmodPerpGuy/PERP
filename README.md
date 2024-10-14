@@ -1,13 +1,17 @@
 # PERP
-SkyWalker's version of PERP. Updated constantly.
+SkyWalker's version of PERP.  <WORKS, I FORGOT WHAT I'VE UPDATED :P>
+# SETUP
+0. U NEED AN SQL DATABASE
+1. INPUT MODULES
+2. CONFIG SQL AT PERP>GAMEMODE>SV_HOOKS.LUA
+3. If all is done correctly, server should work
+
 
 # ChangeLog
-    * First Release
-    * Fixed Chacter Creation Panel
-        * Fixed SQL Query problem
-            * Fixed Query SELECT.
-    * Removed Backdoors
-    * Fixed Weather spamming issue.
+   * FIXED A LOT OF SHIT, STILL MANY BUGS. 
+   * WORKS AS OF OCTOBER 2024
     
 # ToDo's
-    * Fix Car Weather Spam Error
+    * MOST CARS NEED TO BE SETUP CORRECTLY
+    *OPTIMIZATION
+    * SETTING UP A CONTENT PACK
