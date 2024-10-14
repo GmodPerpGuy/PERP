@@ -4,6 +4,7 @@
 GM.JobPaydayInfo[TEAM_ROADCREW] = {"for helping the citizens out.", 75}
 
 GM.JobEquips[TEAM_ROADCREW] = function ( Player )
+	Player:Give("vd2_wrench")
 	Player:Give("weapon_perp_wrench")
 	--Player:Give("weapon_perp_fuelcan")
 end
@@ -28,6 +29,7 @@ concommand.Add("perp_rs_j_alsdkjfahsdlfhowieuhfdnbcvz", GM.RoadCrews_Join)
 function GM.RoadCrews_Leave ( Player )
 	
 	//Strip weapons
+	Player:StripWeapon("vd2_wrench")
 	Player:StripWeapon("weapon_perp_wrench")
 	--Player:StripWeapon("weapon_perp_fuelcan")
 	

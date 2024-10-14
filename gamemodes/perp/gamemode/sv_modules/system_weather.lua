@@ -1,5 +1,4 @@
 
-
 local tornadoSpawns = 	{
 							Vector(-3554.9829, -652.1917, 64.0000), // Exchange
 							Vector(-5996.4771, -5382.1733, 64.0313), // City
@@ -375,157 +374,129 @@ GM.NextCloudChange = DAY_LENGTH * .25;
 GM.NextTempChange = DAY_LENGTH / 24;
 local CLOUD_DIRECTION = 1;
 
-local function setupWeather ( )
-	local lastTempHigh = (AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][2] + AVERAGE_TEMPERATURES[1][2]) * (1/3);
-	local lastTempLow = (AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][2]) * (1/3);
-	local curPattern = -1;
-	local nextChange = 2;
+local function SetupWeather()
+    local lastTempHigh = (AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][2] + AVERAGE_TEMPERATURES[1][2]) / 3
+    local lastTempLow = (AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][1] + AVERAGE_TEMPERATURES[1][2]) / 3
+    local curPattern = -1
+    local nextChange = 2
 
-	for k, v in pairs(AVERAGE_TEMPERATURES) do
-		TRUE_TEMPERATURES[k] = {};
-		
-		local average = (v[1] + v[2]) * .5;
-		local trueMaxMin, trueMinMin = v[2] - 5, v[1] - 5;
-		local trueMaxMax, trueMinMax = v[2] + 10, v[1] + 5;
-		
-		for i = 1, MONTH_DAYS[k] do
-			if (nextChange == 0) then
-				curPattern = 0;
-				
-				if (lastTempHigh + lastTempLow) * .5 > average then
-					while (curPattern == 0) do
-						curPattern = math.Clamp(math.random(-5, 2), -2, 1);
-					end
-				else
-					while (curPattern == 0) do
-						curPattern = math.Clamp(math.random(-2, 5), -2, 1);
-					end
-				end
-				
-				nextChange = math.random(3, 5);
-			end
-			nextChange = nextChange - 1;
-			
-			local thisChangeUpper = math.random(50, 200) * curPattern * .01;
-			local thisChangeLower = math.random(50, 200) * curPattern * .01;
-			
-			lastTempLow = math.Clamp(lastTempLow + thisChangeLower, trueMinMin, trueMinMax);
-			lastTempHigh = math.Clamp(lastTempHigh + thisChangeUpper, trueMaxMin, trueMaxMax);
-		
-			TRUE_TEMPERATURES[k][i] = {lastTempLow, lastTempHigh};
-		end
-	end
-end
-hook.Add("Initialize", "setupWeather", setupWeather);
-
-function GM.handleSnow ( )
-	local storming = GAMEMODE.CloudCondition == CLOUDS_STORMY || GAMEMODE.CloudCondition == CLOUDS_STORMY_LIGHT || GAMEMODE.CloudCondition == CLOUDS_STORMY_SEVERE;
-
-	if (!GAMEMODE.SnowOnGround && GetGlobalInt("temp", 35) <= 32 && storming && GAMEMODE.LastWeatherChange + 20 <= CurTime()) then
-		GAMEMODE.SnowOnGround = true;
-	elseif (GAMEMODE.SnowOnGround && GetGlobalInt("temp", 35) > 32 && GAMEMODE.LastWeatherChange + 10 <= CurTime()) then
-		GAMEMODE.SnowOnGround = nil;
-	end
-end
-hook.Add("Think", "handleSnow", GM.handleSnow);
-
-local CLOUDS_CLEAR = 1;
-local CLOUDS_PARTLY = 2;
-local CLOUDS_MOSTLY_PRE = 3;
-local CLOUDS_MOSTLY_POST = 4;
-local CLOUDS_STORMY = 5;
-local CLOUDS_STORMY_LIGHT = 6;
-local CLOUDS_STORMY_PRE = 7;
-local CLOUDS_STORMY_SEVERE = 8;
-local CLOUDS_HEATWAVE = 9;
-
-function GM.calculateWeather ( ) 
-	local CurrentSeason = MONTH_SEASON_CONV[GAMEMODE.CurrentMonth];
-
-	// Cloud Conditions
-	if (GAMEMODE.NextCloudChange <= 0) then
-		GAMEMODE.CloudCondition = GAMEMODE.NextCloudCondition;
-		GAMEMODE.NextCloudChange = math.random(DAY_LENGTH * .1, DAY_LENGTH * .5);
-		GAMEMODE.LastWeatherChange = CurTime();
-		GAMEMODE.NextWeatherChange = CurTime() + GAMEMODE.NextCloudChange;
-		
-		SetGlobalInt("clouds", GAMEMODE.CloudCondition);
-		GAMEMODE.NextCloudCondition = nil
-		Msg("Weather pattern changed to '" .. CLOUD_NAMES[GAMEMODE.CloudCondition] .. "'.\n");
-		
-		if (GAMEMODE.CloudCondition == CLOUDS_STORMY_SEVERE && math.random(1, 2) == 1) then
-			local spawnLoc = table.Random(tornadoSpawns);
-			
-			local tornadoEnt = ents.Create("weather_tornado");
-			tornadoEnt:SetPos(spawnLoc);
-			tornadoEnt:Spawn();
-		end
-	end
-	GAMEMODE.NextCloudChange = GAMEMODE.NextCloudChange - .5;
-	
-	if (!GAMEMODE.NextCloudCondition) then
-		local rand = math.random(1, 100);
-        local ourTable = {};
-		local ourTable = SEASON_WEATHER_PROB[SEASON_TO_STRING[CurrentSeason]][CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition]];
-		
-		for k, v in pairs(ourTable) do
-			if (rand <= v[1]) then
-				GAMEMODE.NextCloudCondition = v[2];
-				break;
-			else
-				rand = rand - v[1];
-			end
-		end
-				
-		SetGlobalInt("cloudsf", GAMEMODE.NextCloudCondition);
-	end
-	
-	// Temperature
-	//if (GAMEMODE.NextTempChange <= 0) then
-	//	local ourTable = SEASON_TEMP_CLOUDS[SEASON_TO_STRING[CurrentSeason]][CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition]];
-	//	
-	//	if (GAMEMODE.CurrentTime < DAWN_START || GAMEMODE.CurrentTime > DUSK_START) then
-	//		ourTable = ourTable[2];
-	//	else
-	//		ourTable = ourTable[1];
-	//	end
-	//	
-	//	local tempChange = math.random(ourTable[1], ourTable[2]);
-	//	
-	//	local trueTempChange = math.random(20, 50) * .01 * tempChange;
-	//	GAMEMODE.CurrentTemperature = math.Clamp(GAMEMODE.CurrentTemperature + trueTempChange, TRUE_TEMPERATURES[GAMEMODE.CurrentMonth][GAMEMODE.CurrentDay][1], TRUE_TEMPERATURES[GAMEMODE.CurrentMonth][GAMEMODE.CurrentDay][2]);
-	//	
-	//	SetGlobalInt("temp", GAMEMODE.CurrentTemperature);
-	//	Msg("Temperature changed to " .. GAMEMODE.CurrentTemperature .. ". ( Change: " .. trueTempChange .. " )\n");
-	//
-	//	GAMEMODE.NextTempChange = DAY_LENGTH / math.random(30, 60);
-	//end
-	//GAMEMODE.NextTempChange = GAMEMODE.NextTempChange - .5;
+    for k, v in pairs(AVERAGE_TEMPERATURES) do
+        TRUE_TEMPERATURES[k] = {}
+        
+        local average = (v[1] + v[2]) * 0.5
+        local trueMaxMin, trueMinMin = v[2] - 5, v[1] - 5
+        local trueMaxMax, trueMinMax = v[2] + 10, v[1] + 5
+        
+        for i = 1, MONTH_DAYS[k] do
+            if nextChange == 0 then
+                curPattern = 0
+                
+                if (lastTempHigh + lastTempLow) * 0.5 > average then
+                    while curPattern == 0 do
+                        curPattern = math.Clamp(math.random(-5, 2), -2, 1)
+                    end
+                else
+                    while curPattern == 0 do
+                        curPattern = math.Clamp(math.random(-2, 5), -2, 1)
+                    end
+                end
+                
+                nextChange = math.random(3, 5)
+            end
+            nextChange = nextChange - 1
+            
+            local thisChangeUpper = math.random(50, 200) * curPattern * 0.01
+            local thisChangeLower = math.random(50, 200) * curPattern * 0.01
+            
+            lastTempLow = math.Clamp(lastTempLow + thisChangeLower, trueMinMin, trueMinMax)
+            lastTempHigh = math.Clamp(lastTempHigh + thisChangeUpper, trueMaxMin, trueMaxMax)
+        
+            TRUE_TEMPERATURES[k][i] = {lastTempLow, lastTempHigh}
+        end
+    end
 end
 
-GM.MinSkyAlpha = 0
-function GM.manipulateLightTable ( ourTable )
-	local originalPattern = ourTable.pattern;
-	local CurrentSeason = MONTH_SEASON_CONV[GAMEMODE.CurrentMonth];
-	
-	local maxLight = SEASON_LIGHT_VALUES[SEASON_TO_STRING[CurrentSeason]][CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition]];
-	GAMEMODE.MinSkyAlpha = 255 - (((string.byte(maxLight) - 97) / 25) * 255);
-	local newPatByte = math.Clamp(string.byte(ourTable.pattern), string.byte(ourTable.pattern), string.byte(maxLight));
-	
-	GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond or newPatByte;
-	if (newPatByte > GAMEMODE.LastLightingCond) then
-		GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond + 1;
-	elseif (newPatByte < GAMEMODE.LastLightingCond) then
-		GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond - 1;
-	end
-	
-	ourTable.pattern = string.char(GAMEMODE.LastLightingCond);
-	
-	if (maxLight != 'z' || GAMEMODE.CurrentTemperature <= 33) then
-		GAMEMODE.PushDayEffects(false);
-	elseif (maxLight == 'z' && originalPattern != 'a') then
-		GAMEMODE.PushDayEffects(true);
-	end
-	
-	return ourTable;
+hook.Add("Initialize", "SetupWeather", SetupWeather)
+
+function GAMEMODE.HandleSnow()
+    local storming = GAMEMODE.CloudCondition == CLOUDS_STORMY or GAMEMODE.CloudCondition == CLOUDS_STORMY_LIGHT or GAMEMODE.CloudCondition == CLOUDS_STORMY_SEVERE
+
+    if not GAMEMODE.SnowOnGround and GetGlobalInt("temp", 35) <= 32 and storming and GAMEMODE.LastWeatherChange + 20 <= CurTime() then
+        GAMEMODE.SnowOnGround = true
+    elseif GAMEMODE.SnowOnGround and GetGlobalInt("temp", 35) > 32 and GAMEMODE.LastWeatherChange + 10 <= CurTime() then
+        GAMEMODE.SnowOnGround = nil
+    end
 end
+
+hook.Add("Think", "HandleSnow", GAMEMODE.HandleSnow)
+
+function GAMEMODE.CalculateWeather()
+    local CurrentSeason = MONTH_SEASON_CONV[GAMEMODE.CurrentMonth]
+
+    -- Cloud Conditions
+    if GAMEMODE.NextCloudChange <= 0 then
+        GAMEMODE.CloudCondition = GAMEMODE.NextCloudCondition
+        GAMEMODE.NextCloudChange = math.random(DAY_LENGTH * 0.1, DAY_LENGTH * 0.5)
+        GAMEMODE.LastWeatherChange = CurTime()
+        GAMEMODE.NextWeatherChange = CurTime() + GAMEMODE.NextCloudChange
+        
+        SetGlobalInt("clouds", GAMEMODE.CloudCondition)
+        GAMEMODE.NextCloudCondition = nil
+        print("Weather pattern changed to '" .. CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition] .. "'.")
+        
+        if GAMEMODE.CloudCondition == CLOUDS_STORMY_SEVERE and math.random(1, 2) == 1 then
+            local spawnLoc = table.Random(tornadoSpawns)
+            
+            local tornadoEnt = ents.Create("weather_tornado")
+            tornadoEnt:SetPos(spawnLoc)
+            tornadoEnt:Spawn()
+        end
+    end
+    GAMEMODE.NextCloudChange = GAMEMODE.NextCloudChange - 0.5
+    
+    if not GAMEMODE.NextCloudCondition then
+        local rand = math.random(1, 100)
+        local ourTable = SEASON_WEATHER_PROB[SEASON_TO_STRING[CurrentSeason]][CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition]]
+        
+        for _, v in pairs(ourTable) do
+            if rand <= v[1] then
+                GAMEMODE.NextCloudCondition = v[2]
+                break
+            else
+                rand = rand - v[1]
+            end
+        end
+                
+        SetGlobalInt("cloudsf", GAMEMODE.NextCloudCondition)
+    end
+end
+
+GAMEMODE.MinSkyAlpha = 0
+function GAMEMODE.ManipulateLightTable(ourTable)
+    local originalPattern = ourTable.pattern
+    local CurrentSeason = MONTH_SEASON_CONV[GAMEMODE.CurrentMonth]
+    
+    local maxLight = SEASON_LIGHT_VALUES[SEASON_TO_STRING[CurrentSeason]][CLOUD_CONDITION_TO_STRING[GAMEMODE.CloudCondition]]
+    GAMEMODE.MinSkyAlpha = 255 - (((string.byte(maxLight) - 97) / 25) * 255)
+    local newPatByte = math.Clamp(string.byte(ourTable.pattern), string.byte(ourTable.pattern), string.byte(maxLight))
+    
+    GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond or newPatByte
+    if newPatByte > GAMEMODE.LastLightingCond then
+        GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond + 1
+    elseif newPatByte < GAMEMODE.LastLightingCond then
+        GAMEMODE.LastLightingCond = GAMEMODE.LastLightingCond - 1
+    end
+    
+    ourTable.pattern = string.char(GAMEMODE.LastLightingCond)
+    
+    if maxLight ~= 'z' or GAMEMODE.CurrentTemperature <= 33 then
+        GAMEMODE.PushDayEffects(false)
+    elseif maxLight == 'z' and originalPattern ~= 'a' then
+        GAMEMODE.PushDayEffects(true)
+    end
+    
+    return ourTable
+end
+
+
+

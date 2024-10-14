@@ -10,7 +10,7 @@ GM.JobEquips[TEAM_POLICE] = function ( Player )
 	Player:Give("weapon_perp_nightstick");
 	Player:Give("weapon_perp_battering_ram");
 	Player:Give("weapon_perp_handcuffs");
-	//Player:Give("weapon_perp_car_ticket");
+	Player:Give("weapon_perp_car_ticket");
 	Player:GiveAmmo(ammoToGive, 'pistol');
 	Player:SetArmor(50);
 end
@@ -60,7 +60,7 @@ function GM.Police_Leave ( Player )
 	Player:StripWeapon("weapon_perp_battering_ram");
 	Player:StripWeapon("weapon_perp_handcuffs");
 	Player:StripWeapon("weapon_perp_roadspikes");
-	//Player:StripWeapon("weapon_perp_car_ticket");
+	Player:StripWeapon("weapon_perp_car_ticket");
 	Player:SetArmor(0);
 	
 	Player:RemoveCar();
