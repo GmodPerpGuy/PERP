@@ -7,7 +7,7 @@ SkyWalker's version of PERP.  <WORKS, I FORGOT WHAT I'VE UPDATED :P>
 3. If all is done correctly, server should work
 
 
-# ChangeLog
+# ChangeLog   -- https://github.com/msburgess3200/PERP/compare/master...GmodPerpGuy:PERP:master
    * FIXED A LOT OF SHIT, STILL MANY BUGS. 
    * WORKS AS OF OCTOBER 2024
     
